@@ -32,7 +32,7 @@ if (contactForm) {
       message: document.getElementById("message").value.trim(),
     };
 
-    const API_BASE = "https://your-backend-url.example.com"; // <-- replace with your deployed backend URL
+    const API_BASE = "https://cars-web-xxxxx.onrender.com"; 
 
     try {
       const res = await fetch(`${API_BASE}/api/inquiry`, {
