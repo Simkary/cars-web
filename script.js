@@ -32,7 +32,7 @@ if (contactForm) {
       message: document.getElementById("message").value.trim(),
     };
 
-    const API_BASE = "https://cars-web-xxxxx.onrender.com"; 
+    const API_BASE = "https://cars-web-zty0.onrender.com"; 
 
     try {
       const res = await fetch(`${API_BASE}/api/inquiry`, {
