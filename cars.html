@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Cars | TechMotors Car Sales</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Browse Our Cars</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cars.html">Browse Cars</a>
+      <a href="checkout.html">Contact Us</a>
+    </nav>
+  </header>
+
+  <main class="home-container">
+    <section>
+      <h2>Filter Cars</h2>
+      <form id="filterForm">
+        <label for="brand">Brand:</label>
+        <select id="brand">
+          <option value="">All</option>
+          <option value="German">German</option>
+          <option value="Japanese">Japanese</option>
+          <option value="American">American</option>
+        </select>
+        <label for="price">Max Price:</label>
+        <input type="number" id="price" placeholder="e.g. 30000">
+        <button type="submit">Apply Filters</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Available Cars</h2>
+      <div class="car-grid">
+        <div class="car-card" data-brand="German" data-price="45000">
+          <img src="images/bmwsedan.jpg" alt="BMW Sedan">
+          <h3>BMW 3 Series</h3>
+          <p>Price: Ksh.5.8M</p>
+          <a href="checkout.html" class="button-link">Inquire</a>
+        </div>
+        <div class="car-card" data-brand="Japanese" data-price="28000">
+          <img src="images/toyotacorolla.jpg" alt="Toyota Corolla">
+          <h3>Toyota Corolla</h3>
+          <p>Price: Ksh.3.6M</p>
+          <a href="checkout.html" class="button-link">Inquire</a>
+        </div>
+        <div class="car-card" data-brand="American" data-price="35000">
+          <img src="images/fordmustang.jpg" alt="Ford Mustang">
+          <h3>Ford Mustang</h3>
+          <p>Price: Ksh.4.5M</p>
+          <a href="checkout.html" class="button-link">Inquire</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 TechMotors Car Sales. All rights reserved.</p>
+  </footer>
+  <script src="script.js" defer></script>
+</body>
+</html>

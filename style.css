@@ -1,0 +1,140 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f9f9f9;
+  color: #333;
+}
+
+header, footer {
+  background: #222;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+nav a {
+  margin: 0 1rem;
+  color: #fff;
+  text-decoration: none;
+}
+
+nav a:hover {
+  color: #ff4d4d;
+}
+
+.home-container {
+  padding: 2rem;
+}
+
+form input, form select, form textarea, form button {
+  display: block;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+}
+
+button, .button-link {
+  background: #ff4d4d;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button:hover, .button-link:hover {
+  background: #e63939;
+}
+
+/* Car Grid */
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.car-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 1rem;
+  text-align: center;
+}
+
+.car-card img {
+  max-width: 100%;
+  border-radius: 
+  max-width: 100%;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+/* Hero Banner */
+.hero-banner {
+  background: url('images/hero-car.jpg') no-repeat center center/cover;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  position: relative;
+}
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+.hero-content { position: relative; z-index: 1; }
+
+/* Testimonials */
+.testimonials { margin-top: 2rem; text-align: center; }
+.testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 1.5rem; }
+.testimonial-card { background:#fff; padding:1.2rem; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); font-style:italic; }
+
+/* Team */
+.team { margin-top:2rem; text-align:center; }
+.team-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; }
+.team-card { background:#fff; padding:1.2rem; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.team-card img { max-width:100%; border-radius:50%; margin-bottom:1rem; }
+
+/* Services */
+.services { margin-top:2rem; text-align:center; }
+.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; }
+.service-card { background:#fff; padding:1.2rem; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+
+/* News */
+.latest-news { margin-top:2rem; }
+.news-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1.5rem; }
+.news-card { background:#fff; padding:1.2rem; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+
+/* Partners */
+.partners { margin-top:2rem; text-align:center; }
+.partners-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:1.5rem; }
+.partner-card { background:#fff; padding:1rem; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.partner-card img { max-width:80px; margin-bottom:0.5rem; }
+
+/* FAQ */
+.faq { margin-top:2rem; }
+.faq-item { background:#fff; padding:1rem; margin-bottom:1rem; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+
+/* Newsletter */
+.newsletter { background:#fff; text-align:center; padding:2rem 1rem; margin-top:2rem; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+.newsletter form { display:flex; justify-content:center; flex-wrap:wrap; gap:0.5rem; }
+.newsletter input { padding:0.7rem; border:1px solid #ccc; border-radius:4px; width:250px; }
+
+/* CTA */
+.cta-strip { background:#ff4d4d; color:#fff; text-align:center; padding:2rem 1rem; margin-top:2rem; border-radius:8px; }
+
+/* Map */
+.contact-map { margin-top:2rem; text-align:center; }
+.map-container { max-width:900px; margin:0 auto; border-radius:8px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+
+/* Footer */
+.footer-container { display:flex; justify-content:space-between; flex-wrap:wrap; padding:1.5rem; background:#222; color:#fff; border-top:3px solid #ff4d4d; }
+.footer-info, .footer-social { flex:1; min-width:200px; margin:0.5rem; }
+.footer-social a { margin-right:1rem; color:#fff; text-decoration:none; }
+.footer-social a:hover { color:#ff4d4d; }
