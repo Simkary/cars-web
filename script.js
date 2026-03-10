@@ -21,10 +21,34 @@ if (registerForm) {
 // Contact form
 const contactForm = document.getElementById("contactForm");
 if (contactForm) {
-  contactForm.addEventListener("submit", e => {
+  contactForm.addEventListener("submit", async e => {
     e.preventDefault();
-    alert("Thank you for your inquiry! We’ll be in touch soon.");
-    contactForm.reset();
+
+    const payload = {
+      name: document.getElementById("name").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
+      car: document.getElementById("car").value.trim(),
+      message: document.getElementById("message").value.trim(),
+    };
+
+    const API_BASE = "https://your-backend-url.example.com"; // <-- replace with your deployed backend URL
+
+    try {
+      const res = await fetch(`${API_BASE}/api/inquiry`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Server error");
+
+      alert("Thank you for your inquiry! We’ll be in touch soon.");
+      contactForm.reset();
+    } catch (err) {
+      console.error(err);
+      alert("Sorry, we couldn’t submit your request. Please try again later.");
+    }
   });
 }
 
