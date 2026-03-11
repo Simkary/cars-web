@@ -1,3 +1,20 @@
+const API_BASE = "https://cars-web-zty0.onrender.com";
+
+async function sendInquiry(payload) {
+  const res = await fetch(`${API_BASE}/api/inquiry`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Server error (${res.status}): ${text}`);
+  }
+
+  return res.json();
+}
+
 // Login form
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
@@ -32,17 +49,8 @@ if (contactForm) {
       message: document.getElementById("message").value.trim(),
     };
 
-    const API_BASE = "https://cars-web-zty0.onrender.com"; 
-
     try {
-      const res = await fetch(`${API_BASE}/api/inquiry`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Server error");
-
+      await sendInquiry(payload);
       alert("Thank you for your inquiry! We’ll be in touch soon.");
       contactForm.reset();
     } catch (err) {
