@@ -51,10 +51,30 @@ if (loginForm) {
 // Register form
 const registerForm = document.getElementById("registerForm");
 if (registerForm) {
-  registerForm.addEventListener("submit", e => {
+  registerForm.addEventListener("submit", async e => {
     e.preventDefault();
-    alert("Registration complete! Welcome to AutoFind.");
-    registerForm.reset();
+
+    const payload = {
+      username: document.getElementById("username").value.trim(),
+      password: document.getElementById("password").value.trim(),
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/api/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Registration failed");
+
+      alert(data.message || "Registration complete! Welcome to AutoFind.");
+      registerForm.reset();
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Registration failed");
+    }
   });
 }
 

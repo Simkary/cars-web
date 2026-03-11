@@ -1,7 +1,49 @@
 const express = require("express");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
+const sqlite3 = require("sqlite3").verbose();
+const bcrypt = require("bcryptjs");
+const fs = require("fs");
+const path = require("path");
+
 const app = express();
+
+// Ensure data directory exists
+const dataDir = path.join(__dirname, "..", "data");
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+// SQLite DB (stored on disk while container is running)
+const dbFile = path.join(dataDir, "database.sqlite");
+const db = new sqlite3.Database(dbFile);
+
+db.serialize(() => {
+  db.run(
+    `CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      created_at TEXT NOT NULL
+    )`
+  );
+});
+
+function createUser(username, password, callback) {
+  const passwordHash = bcrypt.hashSync(password, 10);
+  const createdAt = new Date().toISOString();
+  db.run(
+    `INSERT INTO users (username, password_hash, created_at) VALUES (?, ?, ?)`,
+    [username, passwordHash, createdAt],
+    function (err) {
+      callback(err, this && this.lastID);
+    }
+  );
+}
+
+function findUserByUsername(username, callback) {
+  db.get(`SELECT * FROM users WHERE username = ?`, [username], callback);
+}
 
 app.use(cors());
 app.use(express.json());
@@ -62,17 +104,65 @@ let lastInquiry = null;
 
 app.get("/api/status", (req, res) => res.json({ ok: true }));
 
-// Basic login endpoint using environment vars (for demo purposes)
-app.post("/api/login", (req, res) => {
+// Register a new user (stored in SQLite)
+app.post("/api/register", (req, res) => {
   const { username, password } = req.body;
-  const validUser = process.env.APP_USER || "admin";
-  const validPass = process.env.APP_PASS || "password";
 
-  if (username === validUser && password === validPass) {
-    return res.json({ success: true, message: "Login successful" });
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: "Username and password are required" });
   }
 
-  return res.status(401).json({ success: false, message: "Invalid credentials" });
+  findUserByUsername(username, (err, user) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: "Database error" });
+    }
+
+    if (user) {
+      return res.status(409).json({ success: false, message: "Username already exists" });
+    }
+
+    createUser(username, password, (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: "Database error" });
+      }
+      res.json({ success: true, message: "User created" });
+    });
+  });
+});
+
+// Login endpoint validates against the SQLite user database (fallbacks to env vars for admin)
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ success: false, message: "Username and password are required" });
+  }
+
+  findUserByUsername(username, (err, user) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ success: false, message: "Database error" });
+    }
+
+    if (user) {
+      const matches = bcrypt.compareSync(password, user.password_hash);
+      if (matches) {
+        return res.json({ success: true, message: "Login successful" });
+      }
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    const validUser = process.env.APP_USER || "admin";
+    const validPass = process.env.APP_PASS || "password";
+
+    if (username === validUser && password === validPass) {
+      return res.json({ success: true, message: "Login successful" });
+    }
+
+    return res.status(401).json({ success: false, message: "Invalid credentials" });
+  });
 });
 
 app.post("/api/inquiry", async (req, res) => {
