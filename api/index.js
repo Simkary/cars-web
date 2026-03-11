@@ -1,9 +1,62 @@
 const express = require("express");
 const cors = require("cors");
+const nodemailer = require("nodemailer");
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+async function sendEmailNotification(inquiry) {
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpPort = process.env.SMTP_PORT;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+  const toAddress = process.env.NOTIFY_TO_EMAIL;
+
+  if (!smtpHost || !smtpPort || !smtpUser || !smtpPass || !toAddress) {
+    console.warn(
+      "Email not sent: missing SMTP config (SMTP_HOST/SMTP_PORT/SMTP_USER/SMTP_PASS/NOTIFY_TO_EMAIL)"
+    );
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: smtpHost,
+    port: Number(smtpPort),
+    secure: Number(smtpPort) === 465,
+    auth: {
+      user: smtpUser,
+      pass: smtpPass,
+    },
+  });
+
+  const html = `
+    <h2>New TechMotors Inquiry</h2>
+    <p><strong>Name:</strong> ${escapeHtml(inquiry.name)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(inquiry.email)}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(inquiry.phone)}</p>
+    <p><strong>Car:</strong> ${escapeHtml(inquiry.car)}</p>
+    <p><strong>Message:</strong></p>
+    <p>${escapeHtml(inquiry.message).replace(/\n/g, "<br>")}</p>
+    <p><em>Received:</em> ${new Date(inquiry.receivedAt).toLocaleString()}</p>
+  `;
+
+  await transporter.sendMail({
+    from: smtpUser,
+    to: toAddress,
+    subject: "New inquiry from TechMotors site",
+    html,
+  });
+}
 
 let lastInquiry = null;
 
@@ -22,8 +75,14 @@ app.post("/api/inquiry", (req, res) => {
 
   lastInquiry = inquiry;
 
-  // TODO: save to database, send email, etc.
   console.log("inquiry", inquiry);
+
+  try {
+    await sendEmailNotification(inquiry);
+  } catch (err) {
+    console.error("Failed to send email notification", err);
+  }
+
   res.json({ success: true });
 });
 
