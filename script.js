@@ -20,7 +20,7 @@ const loginForm = document.getElementById("loginForm");
 if (loginForm) {
   loginForm.addEventListener("submit", e => {
     e.preventDefault();
-    alert("Login successful! (Demo only)");
+    alert("Welcome! You are now logged in.");
     loginForm.reset();
   });
 }
