@@ -53,12 +53,18 @@ if (contactForm) {
       await sendInquiry(payload);
       alert("Thank you for your inquiry! We’ll be in touch soon.");
       contactForm.reset();
+      await fetchLastInquiry();
     } catch (err) {
       console.error(err);
       alert("Sorry, we couldn’t submit your request. Please try again later.");
     }
   });
 }
+
+// Load last inquiry when the page loads (if the section exists)
+window.addEventListener("DOMContentLoaded", () => {
+  fetchLastInquiry();
+});
 
 // Debug helper: fetch and log the last submitted inquiry
 // Usage: open DevTools Console and run `fetchLastInquiry()`
@@ -67,10 +73,39 @@ async function fetchLastInquiry() {
     const res = await fetch(`${API_BASE}/api/last-inquiry`);
     const data = await res.json();
     console.log("Last inquiry:", data.lastInquiry);
+    renderLastInquiry(data.lastInquiry);
     return data.lastInquiry;
   } catch (err) {
     console.error("Failed to fetch last inquiry", err);
   }
+}
+
+function renderLastInquiry(inquiry) {
+  const container = document.getElementById("lastInquiryContent");
+  if (!container) return;
+
+  if (!inquiry) {
+    container.innerHTML = `<p><em>No inquiries submitted yet.</em></p>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <p><strong>Name:</strong> ${escapeHtml(inquiry.name || "")}</p>
+    <p><strong>Email:</strong> ${escapeHtml(inquiry.email || "")}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(inquiry.phone || "")}</p>
+    <p><strong>Car of Interest:</strong> ${escapeHtml(inquiry.car || "")}</p>
+    <p><strong>Message:</strong> ${escapeHtml(inquiry.message || "")}</p>
+    <p><em>Received:</em> ${new Date(inquiry.receivedAt).toLocaleString()}</p>
+  `;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 // Newsletter signup
