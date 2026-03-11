@@ -18,10 +18,33 @@ async function sendInquiry(payload) {
 // Login form
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
-  loginForm.addEventListener("submit", e => {
+  loginForm.addEventListener("submit", async e => {
     e.preventDefault();
-    alert("Welcome! You are now logged in.");
-    loginForm.reset();
+
+    const payload = {
+      username: document.getElementById("username").value.trim(),
+      password: document.getElementById("password").value.trim(),
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/api/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const json = await res.json();
+        throw new Error(json.message || "Login failed");
+      }
+
+      const { message } = await res.json();
+      alert(message || "Welcome! You are now logged in.");
+      loginForm.reset();
+    } catch (err) {
+      console.error(err);
+      alert(err.message || "Login failed");
+    }
   });
 }
 

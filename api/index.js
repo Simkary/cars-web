@@ -62,6 +62,19 @@ let lastInquiry = null;
 
 app.get("/api/status", (req, res) => res.json({ ok: true }));
 
+// Basic login endpoint using environment vars (for demo purposes)
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+  const validUser = process.env.APP_USER || "admin";
+  const validPass = process.env.APP_PASS || "password";
+
+  if (username === validUser && password === validPass) {
+    return res.json({ success: true, message: "Login successful" });
+  }
+
+  return res.status(401).json({ success: false, message: "Invalid credentials" });
+});
+
 app.post("/api/inquiry", async (req, res) => {
   const { name, email, phone, car, message } = req.body;
   const inquiry = {
