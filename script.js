@@ -60,6 +60,19 @@ if (contactForm) {
   });
 }
 
+// Debug helper: fetch and log the last submitted inquiry
+// Usage: open DevTools Console and run `fetchLastInquiry()`
+async function fetchLastInquiry() {
+  try {
+    const res = await fetch(`${API_BASE}/api/last-inquiry`);
+    const data = await res.json();
+    console.log("Last inquiry:", data.lastInquiry);
+    return data.lastInquiry;
+  } catch (err) {
+    console.error("Failed to fetch last inquiry", err);
+  }
+}
+
 // Newsletter signup
 const newsletterForm = document.getElementById("newsletterForm");
 if (newsletterForm) {
