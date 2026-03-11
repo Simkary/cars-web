@@ -62,7 +62,7 @@ let lastInquiry = null;
 
 app.get("/api/status", (req, res) => res.json({ ok: true }));
 
-app.post("/api/inquiry", (req, res) => {
+app.post("/api/inquiry", async (req, res) => {
   const { name, email, phone, car, message } = req.body;
   const inquiry = {
     name,
